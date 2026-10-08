@@ -5,8 +5,11 @@ namespace MNIST.Core.Data;
 
 public static class DataUtils
 {
-	public static Table Read(string filePath)
+	// Read csv from DataSets/...
+	public static Table Read(string fileName)
 	{
+		string filePath = Path.Combine(AppContext.BaseDirectory, "DataSets", fileName);
+
 		using var reader = new StreamReader(filePath);
 		using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
 

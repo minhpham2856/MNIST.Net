@@ -1,12 +1,9 @@
 ﻿using MNIST.Core.Data;
-using System;
-using System.IO;
 
-string baseDirectory = AppContext.BaseDirectory;
+// Get data
+var trainTable = DataUtils.Read("mnist_train.csv");
+var testTable = DataUtils.Read("mnist_test.csv");
 
-string trainPath = Path.Combine(baseDirectory, "DataSets", "mnist_train.csv");
-string testPath = Path.Combine(baseDirectory, "DataSets", "mnist_train.csv");
 
-var trainTable = DataUtils.Read(trainPath);
-
-Console.WriteLine(trainTable.Head(5));
+trainTable.Dimension();
+testTable.Dimension();
