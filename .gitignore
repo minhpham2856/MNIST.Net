@@ -480,3 +480,5 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/MNIST.Core/DataSets/mnist_train.csv
+/MNIST.Core/DataSets/mnist_test.csv
