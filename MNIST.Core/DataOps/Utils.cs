@@ -17,7 +17,7 @@ public static class DataUtils
 
 		while (csv.Read())
 		{
-			var row = csv.Parser.Record!.Select(float.Parse).ToArray();
+			var row = csv.Parser.Record!.Select(double.Parse).ToArray();
 			matrix.Add(row);
 		}
 
@@ -28,7 +28,7 @@ public static class DataUtils
 public static class MathUtils
 {
 	// Fills a matrix with random 0s and 1s
-	public static Matrix FillRandom(this Matrix matrix)
+	public static Matrix FillRandom(this Matrix matrix, double balancer = 0)
 	{
 		var random = Random.Shared;
 
@@ -36,7 +36,7 @@ public static class MathUtils
 		{
 			for (int j = 0; j < matrix.ColumnCount(); j++)
 			{
-				matrix.Values[i][j] = random.Next(2);
+				matrix.Values[i][j] = random.Next(2) + balancer;
 			}
 		}
 

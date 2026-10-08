@@ -30,4 +30,18 @@ internal class Program
 		X_test.Dimension();
 		Y_test.Dimension();
 	}
+
+	public (Matrix W1, Matrix b1, Matrix W2, Matrix b2) InitParams()
+	{
+		var W1 = new Matrix(10, 784).FillRandom(-0.5);
+		var b1 = new Matrix(10, 1).FillRandom(-0.5);
+		var W2 = new Matrix(10, 10).FillRandom(-0.5);
+		var b2 = new Matrix(10, 1).FillRandom(-0.5);
+		return (W1, b1, W2, b2);
+	}
+
+	public void ForwardPass(Matrix W1, Matrix b1, Matrix W2, Matrix b2, Matrix X)
+	{
+		var Z1 = W1 * X;
+	}
 }
