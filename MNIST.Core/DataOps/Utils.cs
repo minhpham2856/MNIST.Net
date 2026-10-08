@@ -44,6 +44,38 @@ public static class MathUtils
 		return matrix;
 	}
 
+	public static Matrix OneHot(Matrix matrix)
+	{
+		if (matrix.IsEmpty()) return new();
+
+		int rowCount = matrix.RowCount();
+
+		// Find max value in matrix -> min classes
+		int numClasses = 0;
+		for (int i = 0; i < rowCount; i++)
+		{
+			for (int j = 0; j < matrix.Values[i].Length; j++)
+			{
+				int value = (int) matrix.Values[i][j];
+				if (value > numClasses) numClasses = value;
+			}
+		}
+		numClasses += 1;
+
+		var oneHotMatrix = new Matrix(rowCount, numClasses);
+		for (int i = 0; i < rowCount; i++)
+		{
+			// Assumes each row in the label matrix contains exactly one label
+			// If the row has multiple values, it will use the first one
+			int label = (int) matrix.Values[i][0];
+
+			// Ensure the label is within bounds (safety check)
+			if (label >= 0 && label < numClasses) oneHotMatrix.Values[i][label] = 1.0;
+		}
+		
+		return oneHotMatrix.Transpose();
+	}
+
 	public static Matrix ActivateReLU(Matrix matrix)
 	{
 		for (int i = 0; i < matrix.RowCount(); i++)
@@ -76,7 +108,6 @@ public static class MathUtils
 				matrix.Values[i][j] = Math.Exp(matrix.Values[i][j]) / sum;
 			}
 		}
-
 
 		return matrix;
 	}

@@ -15,9 +15,23 @@ public class Matrix
 	// Basic matrix info getters
 	public int RowCount() => Values.Length;
 	public int ColumnCount() => IsEmpty() ? 0 : Values[0].Length;
+	public int Size() => RowCount() * ColumnCount();
 	public bool IsEmpty() => Values.Length == 0;
 	public void Dimension() => Console.WriteLine($"[Rows: {RowCount()}, Columns: {ColumnCount()}]");
 	public double[][] Head(int rowCount = 5) => Values.Take(rowCount).ToArray();
+	public double Sum()
+	{
+		var sum = 0.0;
+		for(int i = 0; i < Values.Length; i++)
+		{
+			for(int j = 0;  j < Values[i].Length; j++)
+			{
+				sum += Values[i][j];
+			}
+		}
+
+		return sum;
+	}
 
 	// Add a row to the matrix
 	public void Add(double[] row) => Values = Values.Append(row).ToArray();
@@ -54,23 +68,23 @@ public class Matrix
 	}
 
 	// Transpose the matrix
-	public void Transpose()
+	public Matrix Transpose()
 	{
-		if (IsEmpty()) return;
+		if (IsEmpty()) return new();
 
 		int rowCount = RowCount();
 		int columnCount = ColumnCount();
 
-		var transposed = new double[columnCount][];
-		for (int column = 0; column < columnCount; column++)
+		var transposed = new Matrix(columnCount, rowCount);
+		for (int i = 0; i < rowCount; i++)
 		{
-			var row = new double[rowCount];
-			for (int i = 0; i < rowCount; i++) row[i] = Values[i][column];
-
-			transposed[column] = row;
+			for (int j = 0; j < columnCount; j++)
+			{
+				transposed.Values[j][i] = Values[i][j];
+			}
 		}
 
-		Values = transposed;
+		return transposed;
 	}
 
 	// Operator for addition of 2 matrices
@@ -94,6 +108,47 @@ public class Matrix
 
 		return new Matrix(resultData);
 	}
+
+	// Operator for subtraction of 2 matrices
+	public static Matrix operator -(Matrix matrixA, Matrix matrixB)
+	{
+		bool differentRowSize = matrixA.RowCount() != matrixB.RowCount();
+		bool differentColumnSize = matrixA.ColumnCount() != matrixB.ColumnCount();
+
+		if (differentRowSize || differentColumnSize) throw new InvalidOperationException("[E] Incompatible dimensions");
+
+		int rows = matrixA.RowCount();
+		int cols = matrixA.ColumnCount();
+
+		double[][] resultData = new double[rows][];
+		for (int i = 0; i < rows; i++)
+		{
+			resultData[i] = new double[cols];
+			for (int j = 0; j < cols; j++)
+				resultData[i][j] = matrixA.Values[i][j] - matrixB.Values[i][j];
+		}
+
+		return new Matrix(resultData);
+	}
+
+	// Operator for scalar matrix
+	public static Matrix operator *(double scalar, Matrix matrix)
+	{
+		int rows = matrix.RowCount();
+		int cols = matrix.ColumnCount();
+
+		double[][] resultData = new double[rows][];
+		for (int i = 0; i < rows; i++)
+		{
+			resultData[i] = new double[cols];
+			for (int j = 0; j < cols; j++)
+				resultData[i][j] = scalar * matrix.Values[i][j];
+		}
+
+		return new(resultData);
+	}
+
+	public static Matrix operator *(Matrix matrix, double scalar) => scalar * matrix;
 
 	// Operator for dot product of 2 matrices
 	public static Matrix operator *(Matrix matrixA, Matrix matrixB)

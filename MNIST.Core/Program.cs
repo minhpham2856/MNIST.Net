@@ -1,12 +1,14 @@
 ﻿using MNIST.Core.Data;
+using static MNIST.Core.Data.MathUtils;
+using static MNIST.Core.Data.DataUtils;
 
 internal class Program
 {
 	private static void Main(string[] args)
 	{
 		// Get data
-		var trainSet = DataUtils.Read("mnist_train.csv");
-		var testSet = DataUtils.Read("mnist_test.csv");
+		var trainSet = Read("mnist_train.csv");
+		var testSet = Read("mnist_test.csv");
 
 		// Check datasets
 		//trainSet.Dimension();
@@ -40,9 +42,20 @@ internal class Program
 		return (W1, b1, W2, b2);
 	}
 
-	public void ForwardPass(Matrix W1, Matrix b1, Matrix W2, Matrix b2, Matrix X)
+	public (Matrix Z1, Matrix A1, Matrix Z2, Matrix A2) ForwardPass(Matrix W1, Matrix b1, Matrix W2, Matrix b2, Matrix X)
 	{
 		var Z1 = W1 * X + b1;
-		var A1 = MathUtils.ActivateReLU(Z1);
+		var A1 = ActivateReLU(Z1);
+
+		var Z2 = W2 * A1 + b2;
+		var A2 = ActivateSoftmax(Z2);
+
+		return (W1, A1, W2, A2);
+	}
+
+	public (Matrix Z1, Matrix A1, Matrix Z2, Matrix A2) BackwardPass(Matrix Z1, Matrix A1, Matrix Z2, Matrix A2, Matrix Y)
+	{
+		var m = Y.Values.Length;
+		var OneHotY = OneHot(Y);
 	}
 }
