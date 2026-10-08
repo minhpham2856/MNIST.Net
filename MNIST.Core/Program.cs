@@ -42,6 +42,7 @@ internal class Program
 
 	public void ForwardPass(Matrix W1, Matrix b1, Matrix W2, Matrix b2, Matrix X)
 	{
-		var Z1 = W1 * X;
+		var Z1 = W1 * X + b1;
+		var A1 = MathUtils.ActivateReLU(Z1);
 	}
 }

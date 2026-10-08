@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using System.Globalization;
+using System;
 
 namespace MNIST.Core.Data;
 
@@ -39,6 +40,43 @@ public static class MathUtils
 				matrix.Values[i][j] = random.Next(2) + balancer;
 			}
 		}
+
+		return matrix;
+	}
+
+	public static Matrix ActivateReLU(Matrix matrix)
+	{
+		for (int i = 0; i < matrix.RowCount(); i++)
+		{
+			for (int j = 0; j < matrix.ColumnCount(); j++)
+			{
+				matrix.Values[i][j] = Math.Max(0, matrix.Values[i][j]);
+			}
+		}
+		return matrix;
+	}
+
+	public static Matrix ActivateSoftmax(Matrix matrix)
+	{
+		// e^Xi / sum(e^Xj)
+
+		var sum = 0.0;
+		for (int i = 0; i < matrix.RowCount(); i++)
+		{
+			for (int j = 0; j < matrix.ColumnCount(); j++)
+			{
+				sum += Math.Exp(matrix.Values[i][j]);
+			}
+		}
+
+		for (int i = 0; i < matrix.RowCount(); i++)
+		{
+			for (int j = 0; j < matrix.ColumnCount(); j++)
+			{
+				matrix.Values[i][j] = Math.Exp(matrix.Values[i][j]) / sum;
+			}
+		}
+
 
 		return matrix;
 	}
